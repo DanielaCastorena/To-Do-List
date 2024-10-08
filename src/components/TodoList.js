@@ -94,12 +94,9 @@ const TodoList = () => {
   };
 
   const getFilteredTasks = () => {
-    const today = format(new Date(), 'yyyy-MM-dd');
     return tasks.filter((task) => {
       const taskDate = task.date ? format(new Date(task.date), 'yyyy-MM-dd') : null;
       switch (filter) {
-        case 'today':
-          return taskDate === today;
         case 'scheduled':
           return taskDate && new Date(task.date) > new Date();
         case 'completed':
