@@ -1,0 +1,311 @@
+body {
+  background-color: #718df5;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 2.5rem;
+  font-family: 'Fraunces', serif;
+  font-size: 38px;
+  margin: 40px 0;
+  color: white;
+}
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 30px;
+  margin: 20px 0;
+  color: rgb(0, 0, 0);
+}
+
+.dashboard-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+  font-family: 'Fraunces', serif;
+  text-align: left;
+  font-size: 24px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.dashboard-divider {
+  border: 0;
+  height: 1px;
+  background: #007bff;
+  margin: 10px 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content input,
+.modal-content textarea {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-buttons button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-buttons button:hover {
+  background-color: #0056b3;
+}
+
+.modal-buttons button:last-child {
+  background-color: #6c757d;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #5a6268;
+}
+
+.todo-list {
+  position: relative;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  padding-bottom: 80px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-task-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  color: white;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-task-btn:hover {
+  background-color: #0056b3;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #e0f7fa;
+  border-radius: 4px;
+}
+
+.task-checkbox {
+  margin-right: 10px;
+}
+
+.task-text {
+  flex-grow: 1;
+  margin: 2px 5px;
+}
+
+.todo-item.completed .task-text {
+  text-decoration: line-through;
+  color: #a0a0a0;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.remove-btn:hover {
+  color: #ff1a1a;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.task-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.empty-board-message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #808080;
+  font-family: 'Poppins', sans-serif;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border: 1px dashed #ddd;
+  border-radius: 10px;
+}
+
+.filter-buttons button {
+  margin-right: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filter-buttons button:hover {
+  background-color: #0056b3;
+}
+
+.filter-buttons .active-filter {
+  background-color: #0056b3;
+}
+
+.task-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.task-details {
+  color: gray;
+  font-size: 0.8em;
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.edit-icon {
+  color: #0068ff;
+  cursor: pointer;
+  margin-left: 3px;
+  font-size: 18px;
+}
+
+.edit-icon:hover,
+.remove-icon:hover {
+  opacity: 99;
+}
+
+.todo-item .task-checkbox {
+  appearance: none;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.todo-item .task-checkbox:checked {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+.todo-item .task-checkbox:checked::after {
+  content: '\2714';
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.filter-select {
+  margin: 10px 0;
+  padding: 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.google-signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.google-signin-btn:hover {
+  background-color: #357ae8;
+}
+
+.google-signin-btn img {
+  margin-right: 10px;
+}
+
+.google-signin-btn:active {
+  background-color: #2a65c7;
+}
+
+.custom-hr {
+  width: 97%;
+  margin: 10px auto;
+  border: .7px solid #000000;
+  opacity: 1.0;
+}
+
+.login-page .profile-picture {
+  display: none;
+}
