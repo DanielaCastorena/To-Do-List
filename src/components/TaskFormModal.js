@@ -73,7 +73,7 @@ const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit }) => {
         <div className="modal-content">
           <input
             type="text"
-            placeholder="Task"
+            placeholder="Enter task..."
             value={task}
             onChange={(e) => setTask(e.target.value)}
             onKeyDown={handleKeyPress}
