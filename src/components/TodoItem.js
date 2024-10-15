@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
-import { format, isValid } from 'date-fns';
+import { format } from 'date-fns';
 
 const TodoItem = ({ task, onRemove, onComplete, onEdit }) => {
   const formatTime = (timeString) => {
@@ -27,9 +27,9 @@ const TodoItem = ({ task, onRemove, onComplete, onEdit }) => {
 
   const details = [];
   if (task.date) {
-    const parsedDate = new Date(task.date);
-    if (isValid(parsedDate)) {
-      details.push(format(parsedDate, 'MMM dd, yyyy'));
+    const formattedDate = formatDate(task.date); // Use formatDate here
+    if (formattedDate) {
+      details.push(formattedDate); // Add formatted date to details
     }
   }
   if (task.time) {
@@ -43,12 +43,15 @@ const TodoItem = ({ task, onRemove, onComplete, onEdit }) => {
 
   return (
     <li className={`todo-item ${task.completed ? 'completed' : ''}`}>
-      <input
-        type="checkbox"
-        checked={task.completed}
-        onChange={onComplete}
-        className="task-checkbox"
-      />
+      <label className="checkbox-container">
+        <input
+          type="checkbox"
+          checked={task.completed}
+          onChange={onComplete}
+          className="task-checkbox"
+        />
+        <span className="checkmark"></span>
+      </label>
       <div className="task-content">
         <span className="task-text" onClick={onComplete}>{task.text}</span>
         {detailsText && <span className="task-details">{detailsText}</span>}

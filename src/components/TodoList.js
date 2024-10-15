@@ -2,37 +2,22 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
 import TaskFormModal from './TaskFormModal';
-import { format } from 'date-fns';
-import { v4 as uuidv4 } from 'uuid'; 
-import { db } from './firebase'; 
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { useAuth } from './Login';  
-import { Timestamp } from 'firebase/firestore'; 
+import { isToday, isAfter } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 const TodoList = () => {
   const [tasks, setTasks] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [filter, setFilter] = useState('all');
   const [currentTask, setCurrentTask] = useState(null);
-  const { user } = useAuth(); 
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      if (user) {
-        try {
-          const tasksSnapshot = await getDocs(collection(db, 'users', user.uid, 'tasks'));
-          const userTasks = tasksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          setTasks(userTasks);  
-        } catch (error) {
-          console.error("Error fetching tasks from Firestore:", error);
-        }
-      } else if (localStorage.getItem('guest')) {
-        const localTasks = JSON.parse(localStorage.getItem('guestTasks')) || [];
-        setTasks(localTasks);
-      }
+    const fetchTasks = () => {
+      const localTasks = JSON.parse(localStorage.getItem('guestTasks')) || [];
+      setTasks(localTasks);
     };
     fetchTasks();
-  }, [user]);
+  }, []);
 
   const saveTasksToLocalStorage = (updatedTasks) => {
     localStorage.setItem('guestTasks', JSON.stringify(updatedTasks));
@@ -40,69 +25,57 @@ const TodoList = () => {
 
   const addTask = async (newTask) => {
     try {
-      if (!user || !user.uid) {
-        console.error("User is not logged in or UID is missing");
-        return;
+      if (currentTask) {
+        const updatedTasks = tasks.map((task) =>
+          task.id === currentTask.id ? { ...task, ...newTask } : task
+        );
+        setTasks(updatedTasks);
+        saveTasksToLocalStorage(updatedTasks);
+      } else {
+        const taskData = {
+          ...newTask,
+          id: uuidv4(),
+          completed: false,
+        };
+        const updatedTasks = [...tasks, taskData];
+        setTasks(updatedTasks);
+        saveTasksToLocalStorage(updatedTasks);
       }
-      const taskData = {
-        ...newTask,
-        id: uuidv4(),
-        date: newTask.date ? Timestamp.fromDate(new Date(newTask.date)) : null,
-        createdAt: Timestamp.fromDate(new Date()),
-      };
-      await addDoc(collection(db, 'users', user.uid, 'tasks'), taskData);
       setModalOpen(false);
+      setCurrentTask(null); 
     } catch (error) {
       console.error("Error in addTask:", error);
     }
   };
+  
 
-  const toggleComplete = async (taskId) => {
-    const task = tasks.find((task) => task.id === taskId);
-    if (task) {
-      try {
-        if (user) {
-          const taskRef = doc(db, 'users', user.uid, 'tasks', taskId);
-          await updateDoc(taskRef, { completed: !task.completed });
-        } else {
-          const updatedTasks = tasks.map((task) =>
-            task.id === taskId ? { ...task, completed: !task.completed } : task
-          );
-          setTasks(updatedTasks);
-          saveTasksToLocalStorage(updatedTasks);
-        }
-      } catch (error) {
-        console.error("Error toggling task:", error);
-      }
-    }
+  const toggleComplete = (taskId) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
   };
 
-  const removeTask = async (taskId) => {
+  const removeTask = (taskId) => {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks); 
-
-    try {
-      if (user) {
-        await deleteDoc(doc(db, 'users', user.uid, 'tasks', taskId));
-      } else {
-        saveTasksToLocalStorage(updatedTasks);
-      }
-    } catch (error) {
-      console.error("Error deleting task: ", error);
-      setTasks(tasks);
-    }
+    setTasks(updatedTasks);
+    saveTasksToLocalStorage(updatedTasks);
   };
 
   const getFilteredTasks = () => {
+    const today = new Date();
     return tasks.filter((task) => {
-      const taskDate = task.date ? format(new Date(task.date), 'yyyy-MM-dd') : null;
+      const taskDate = task.date ? new Date(task.date) : null;
       switch (filter) {
-        case 'scheduled':
-          return taskDate && new Date(task.date) > new Date();
         case 'completed':
           return task.completed;
         case 'notCompleted':
           return !task.completed;
+        case 'scheduled':
+          return taskDate && isAfter(taskDate, today);
+        case 'today':
+          return taskDate && isToday(taskDate);
         default:
           return true;
       }
@@ -115,10 +88,10 @@ const TodoList = () => {
         return 'No tasks completed yet!';
       case 'notCompleted':
         return 'All tasks complete!';
-      case 'today':
-        return 'No tasks for today!';
       case 'scheduled':
-        return 'No scheduled tasks!';
+        return 'No tasks scheduled!';
+      case 'today':
+        return 'No tasks today!';
       default:
         return "No tasks yet!";
     }
@@ -133,7 +106,7 @@ const TodoList = () => {
       <button
         className="add-task-btn"
         onClick={() => {
-          setCurrentTask(null); 
+          setCurrentTask(null);
           setModalOpen(true);
         }}
       >
@@ -146,10 +119,10 @@ const TodoList = () => {
         onChange={(e) => setFilter(e.target.value)}
       >
         <option value="all">All Tasks</option>
-        <option value="today">Today</option>
-        <option value="scheduled">Scheduled</option>
         <option value="completed">Completed</option>
         <option value="notCompleted">Not Completed</option>
+        <option value="scheduled">Scheduled</option>
+        <option value="today">Today</option>
       </select>
 
       <ul className="task-list">

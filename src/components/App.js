@@ -1,60 +1,61 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './Login';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import TodoList from './TodoList';
-import LoginPage from './LoginPage';
-import ProfileDropdown from './ProfileDropdown';
-import './App.css';
+import './App.css'; 
 
 const App = () => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    document.body.className = theme === 'dark' ? 'dark-mode' : '';
+    localStorage.setItem('theme', theme);
+
+    const anchors = document.querySelectorAll('a[href^="#"]');
+    anchors.forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    return () => {
+      anchors.forEach(anchor => {
+        anchor.removeEventListener('click', function(e) {
+          e.preventDefault();
+        });
+      });
+    };
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
   return (
-    <AuthProvider>
-      <Router>
-        <Main />
-      </Router>
-    </AuthProvider>
+    <Router>
+      <div className={`app-container ${theme}`}>
+        <Header theme={theme} toggleTheme={toggleTheme} />
+        <Routes>
+          <Route path="/" element={<TodoList />} />
+          <Route path="/todo" element={<TodoList />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
-const Main = () => {
-  const { loading } = useAuth();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div className="app-container">
-      <Header />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/todo" element={<ProtectedRoute><TodoList /></ProtectedRoute>} />
-        <Route path="/" element={<Navigate to="/login" />} />
-      </Routes>
-    </div>
-  );
-};
-
-const Header = () => {
-  const { user } = useAuth();
-  const firstName = user?.displayName ? user.displayName.split(' ')[0] : '';
-
+const Header = ({ theme, toggleTheme }) => {
   return (
     <header className="app-header">
-      <h1>{firstName ? `${firstName}'s To-Do List` : 'To-Do List'}</h1>
-      <ProfileDropdown />
+      <h1>To-Do List</h1>
+      <button onClick={toggleTheme} className="theme-toggle-btn">
+        {theme === 'light' ? '⏾' : '☀︎'}
+      </button>
     </header>
   );
-};
-
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  return children;
 };
 
 export default App;
