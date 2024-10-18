@@ -6,23 +6,23 @@ html, body {
   height: 100%;
   margin-bottom: 20px;
   padding: 0;
-  overflow: auto;
 }
 
 body {
-  background: linear-gradient(#ececec, #ffffff);
+  background: linear-gradient(#dbdbdb, #ffffff);
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh; 
+  overflow-y: auto;
 }
 
 body.dark-mode {
-  background: linear-gradient(135deg, #000000, #1e1e1e);
+  background: linear-gradient(135deg, #0c0c0c, #232323);
   background-size: cover;
   color: #e7e7e7;
   background-repeat: no-repeat;
   min-height: 100vh; 
-  overflow-y: auto; 
+  overflow-y: hidden; 
 }
 
 body.dark-mode h1,
@@ -473,4 +473,10 @@ body.dark-mode .theme-toggle-btn {
 
 body.dark-mode .theme-toggle-btn:hover {
   background-color: #e2e2e2;
+}
+
+.footer {
+  font-family: 'Fraunces', serif;
+  text-align: center;
+  padding: 5px;
 }

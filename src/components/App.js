@@ -42,6 +42,9 @@ const App = () => {
           <Route path="/" element={<TodoList />} />
           <Route path="/todo" element={<TodoList />} />
         </Routes>
+        <footer className="footer">
+        <p>Created by Daniela Castorena</p>
+      </footer>
       </div>
     </Router>
   );
