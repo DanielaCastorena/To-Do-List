@@ -43,7 +43,7 @@ Ensure that you have Node.js and npm installed on your machine.
 
 ### Installation
 Clone the repository:
-git clone https://github.com/your-username/todo-list.git
+git clone https://github.com/DanielaCastorena/To-Do-List
 cd todo-list
 
 Install the dependencies:
